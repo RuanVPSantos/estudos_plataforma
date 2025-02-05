@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import { UsuarioInterface } from '../types';
+import Api from '../api/api';
+const api = new Api();
 
 interface AuthContextType {
   user: UsuarioInterface | null;
@@ -17,37 +18,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UsuarioInterface | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Validate token and set user
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // Add token validation logic here
-    }
+    const loadUser = async () => {
+      try {
+        const { user } = await api.getUser();
+        setUser(user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+
+    loadUser();
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const data = await api.login(email, password);
+      const { user } = await api.getUser(); // Busca os dados do usuário após o login
       setUser(user);
+      return data;
     } catch (error) {
-      throw new Error('Login failed');
+      throw new Error('Falha no login');
     }
   };
 
-  const register = async (nome: string, email: string, password: string) => {
+  const register = async (nome: string, email: string, senha: string) => {
     try {
-      await axios.post('/api/auth/register', { nome, email, password });
+      await api.register({ nome, email, senha });
     } catch (error) {
-      throw new Error('Registration failed');
+      throw new Error('Falha no registro');
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+    api.logout();
     setUser(null);
   };
 

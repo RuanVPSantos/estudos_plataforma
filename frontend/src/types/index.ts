@@ -118,3 +118,9 @@ export interface ConteudoUpdateInput {
   ordem?: number;
   subCategoriaId?: number;
 }
+
+export interface UsuarioUpdateInput {
+  nome?: string;
+  email?: string;
+  senha?: string;
+}
