@@ -1,6 +1,6 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { checkLogin } from '../utils/check.login';
+import { checkAdmin } from '../utils/check.login';
 import { SubCategoriaInputSchemaJson, SubCategoriaUpdateInputSchemaJson } from './schemas';
 import { SubCategoriaInput, SubCategoriaUpdateInput } from './interface';
 import SubCategoriaController from './controller';
@@ -46,7 +46,7 @@ async function SubCategoriaRouter(fastify: FastifyInstance) {
 
     fastify.post('/',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: SubCategoriaInputSchemaJson,
             },
@@ -65,7 +65,7 @@ async function SubCategoriaRouter(fastify: FastifyInstance) {
 
     fastify.put('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: SubCategoriaUpdateInputSchemaJson,
                 params: {
@@ -92,7 +92,7 @@ async function SubCategoriaRouter(fastify: FastifyInstance) {
 
     fastify.delete('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 params: {
                     type: 'object',

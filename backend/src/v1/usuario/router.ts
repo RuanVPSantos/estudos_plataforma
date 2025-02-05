@@ -1,6 +1,6 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { checkLogin } from '../utils/check.login';
+import { checkAdmin } from '../utils/check.login';
 import { UsuarioInputSchemaJson, UsuarioUpdateInputSchemaJson, UsuarioLoginSchemaJson } from './schemas';
 import { UsuarioInput, UsuarioUpdateInput, UsuarioLogin } from './interface';
 import UsuarioController from './controller';
@@ -9,7 +9,7 @@ const modelController = new UsuarioController();
 
 async function UsuarioRouter(fastify: FastifyInstance) {
     fastify.get('/all', {
-        preHandler: [checkLogin],
+        preHandler: [checkAdmin],
     },
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
@@ -24,7 +24,7 @@ async function UsuarioRouter(fastify: FastifyInstance) {
 
     fastify.get('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 params: {
                     type: 'object',
@@ -67,7 +67,7 @@ async function UsuarioRouter(fastify: FastifyInstance) {
 
     fastify.post('/',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: UsuarioInputSchemaJson,
             },
@@ -86,7 +86,7 @@ async function UsuarioRouter(fastify: FastifyInstance) {
 
     fastify.put('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: UsuarioUpdateInputSchemaJson,
                 params: {
@@ -113,7 +113,7 @@ async function UsuarioRouter(fastify: FastifyInstance) {
 
     fastify.delete('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 params: {
                     type: 'object',

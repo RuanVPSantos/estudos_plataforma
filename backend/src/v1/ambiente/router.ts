@@ -1,6 +1,6 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { checkLogin } from '../utils/check.login';
+import { checkAdmin } from '../utils/check.login';
 import { AmbienteInputSchemaJson, AmbienteUpdateInputSchemaJson } from './schemas';
 import { AmbienteInput, AmbienteUpdateInput } from './interface';
 import AmbienteController from './controller';
@@ -46,7 +46,7 @@ async function AmbienteRouter(fastify: FastifyInstance) {
 
     fastify.post('/',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: AmbienteInputSchemaJson,
             },
@@ -65,7 +65,7 @@ async function AmbienteRouter(fastify: FastifyInstance) {
 
     fastify.put('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 params: {
                     type: 'object',
@@ -91,7 +91,7 @@ async function AmbienteRouter(fastify: FastifyInstance) {
 
     fastify.delete('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: AmbienteUpdateInputSchemaJson,
                 params: {

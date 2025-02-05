@@ -1,6 +1,6 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { checkLogin } from '../utils/check.login';
+import { checkAdmin } from '../utils/check.login';
 import { CategoriaInputSchemaJson, CategoriaUpdateInputSchemaJson } from './schemas';
 import { CategoriaInput, CategoriaUpdateInput } from './interface';
 import CategoriaController from './controller';
@@ -46,7 +46,7 @@ async function CategoriaRouter(fastify: FastifyInstance) {
 
     fastify.post('/',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: CategoriaInputSchemaJson,
             },
@@ -65,7 +65,7 @@ async function CategoriaRouter(fastify: FastifyInstance) {
 
     fastify.put('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: CategoriaUpdateInputSchemaJson,
                 params: {
@@ -92,7 +92,7 @@ async function CategoriaRouter(fastify: FastifyInstance) {
 
     fastify.delete('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 params: {
                     type: 'object',

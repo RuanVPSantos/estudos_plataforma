@@ -1,6 +1,6 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { checkLogin } from '../utils/check.login';
+import { checkAdmin } from '../utils/check.login';
 import { ConteudoInputSchemaJson, ConteudoUpdateInputSchemaJson } from './schemas';
 import { ConteudoInput, ConteudoUpdateInput } from './interface';
 import ConteudoController from './controller';
@@ -46,7 +46,7 @@ async function ConteudoRouter(fastify: FastifyInstance) {
 
     fastify.post('/',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: ConteudoInputSchemaJson,
             },
@@ -65,7 +65,7 @@ async function ConteudoRouter(fastify: FastifyInstance) {
 
     fastify.put('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
             schema: {
                 body: ConteudoUpdateInputSchemaJson,
                 params: {
@@ -92,7 +92,7 @@ async function ConteudoRouter(fastify: FastifyInstance) {
 
     fastify.put('/subir/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
         },
         async (request, reply) => {
             try {
@@ -108,7 +108,7 @@ async function ConteudoRouter(fastify: FastifyInstance) {
 
     fastify.put('/descer/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
         },
         async (request, reply) => {
             try {
@@ -124,7 +124,7 @@ async function ConteudoRouter(fastify: FastifyInstance) {
 
     fastify.delete('/:id',
         {
-            preHandler: [checkLogin],
+            preHandler: [checkAdmin],
         },
         async (request, reply) => {
             try {
