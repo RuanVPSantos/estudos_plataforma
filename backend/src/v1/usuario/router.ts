@@ -1,6 +1,5 @@
-
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { checkAdmin } from '../utils/check.login';
+import { checkAdmin, checkLogin } from '../utils/check.login';
 import { UsuarioInputSchemaJson, UsuarioUpdateInputSchemaJson, UsuarioLoginSchemaJson } from './schemas';
 import { UsuarioInput, UsuarioUpdateInput, UsuarioLogin } from './interface';
 import UsuarioController from './controller';
@@ -14,6 +13,23 @@ async function UsuarioRouter(fastify: FastifyInstance) {
         async (request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const models = await modelController.getAllUsuarios();
+                return reply.status(200).send(models);
+            } catch (error) {
+                console.error('Error fetching models:', error);
+                return reply.status(500).send({ message: 'Internal server error' });
+            }
+        }
+    );
+
+
+    fastify.get('/',
+        {
+            preHandler: [checkLogin],
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                const id = (request.user as { id: number }).id;
+                const models = await modelController.getUsuarioById(id);
                 return reply.status(200).send(models);
             } catch (error) {
                 console.error('Error fetching models:', error);
@@ -67,7 +83,6 @@ async function UsuarioRouter(fastify: FastifyInstance) {
 
     fastify.post('/',
         {
-            preHandler: [checkAdmin],
             schema: {
                 body: UsuarioInputSchemaJson,
             },
@@ -79,6 +94,26 @@ async function UsuarioRouter(fastify: FastifyInstance) {
                 return reply.status(200).send(model);
             } catch (error) {
                 console.error('Error creating model:', error);
+                return reply.status(500).send({ message: 'Internal server error' });
+            }
+        }
+    );
+
+    fastify.put('/',
+        {
+            preHandler: [checkLogin],
+            schema: {
+                body: UsuarioUpdateInputSchemaJson,
+            },
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                const id = (request.user as { id: number }).id;
+                const data = request.body as UsuarioUpdateInput;
+                const model = await modelController.updateUsuario(id, data);
+                return reply.status(200).send(model);
+            } catch (error) {
+                console.error('Error updating model:', error);
                 return reply.status(500).send({ message: 'Internal server error' });
             }
         }
@@ -107,6 +142,22 @@ async function UsuarioRouter(fastify: FastifyInstance) {
             } catch (error) {
                 console.error('Error updating model:', error);
                 return reply.status(500).send({ message: 'Internal server error' });
+            }
+        }
+    );
+
+    fastify.delete("/",
+        {
+            preHandler: [checkLogin],
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                const userId = (request.user as { id: number }).id;
+                const model = await modelController.deleteUsuario(userId);
+                return reply.status(200).send(model);
+            } catch (error) {
+                console.error('Error deleting model:', error);
+                return reply.status(500).send({ message: 'Erro interno do servidor' });
             }
         }
     );

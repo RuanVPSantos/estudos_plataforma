@@ -18,7 +18,15 @@ export default class SubCategoriaModel {
     }
 
     async getSubCategoriaById(id: number): Promise<SubCategoriaInterface> {
-        return await this.prisma.subCategoria.findUniqueOrThrow({ where: { id } });
+        return await this.prisma.subCategoria.findUniqueOrThrow({
+            where: { id }, include: {
+                Conteudos: {
+                    orderBy: {
+                        ordem: 'asc'
+                    }
+                }
+            }
+        });
     }
 
     async updateSubCategoria(id: number, data: SubCategoriaUpdateInput): Promise<SubCategoriaInterface> {

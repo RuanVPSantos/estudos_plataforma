@@ -44,6 +44,8 @@ async function SubCategoriaRouter(fastify: FastifyInstance) {
         }
     );
 
+
+
     fastify.post('/',
         {
             preHandler: [checkAdmin],

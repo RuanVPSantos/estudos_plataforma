@@ -17,7 +17,7 @@ export default class AmbienteModel {
         return await this.prisma.ambiente.findMany(
             {
                 include: {
-                    Categoria: {
+                    Categorias: {
                         include: {
                             SubCategorias: true
                         },
