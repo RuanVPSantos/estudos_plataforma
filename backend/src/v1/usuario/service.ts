@@ -47,6 +47,12 @@ export default class UsuarioServices {
 
     async createUsuario(data: UsuarioInput): Promise<UsuarioInterface> {
         try {
+            const usuario = await this.model.getUsuarioByEmail(data.email);
+            if (usuario) {
+                throw new Error('Usuário já existe');
+            }
+            const senhaCriptografada = await Auth.hashPassword(data.senha);
+            data.senha = senhaCriptografada;
             return await this.model.createUsuario(data);
         } catch (error) {
             throw error;
